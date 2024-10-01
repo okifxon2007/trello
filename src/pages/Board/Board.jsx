@@ -88,8 +88,8 @@ const Board = () => {
     setColor(selectedColor);
   };
 
-  const boardnav = () => {
-    nav("/");
+  const boardnav = (id) => {
+    nav(`/${id}`);
   };
 
   
@@ -102,14 +102,6 @@ const Board = () => {
 
   function handlpeople(e) {
     e.preventDefault();
-
-    const people = {
-      email: emailref.current.value,
-      boardId: boardId
-    };
-
-    console.log(people);
-
   }
 
   return (
@@ -275,8 +267,8 @@ const Board = () => {
         <div className="cards-container flex flex-wrap">
           {cards.map((item) => (
             <div
-  key={item._id}
-  onClick={boardnav}
+  key={item.id}
+  onClick={() => boardnav(item.id)} 
   className={`relative w-[310px] h-36 p-4 rounded-lg m-4 shadow-lg bg-${item.color}-500 transition-transform duration-500 transform hover:scale-105 hover:shadow-lg hover:-translate-y-2`}
   style={{
     boxShadow: `0px 6px 15px rgba(${item.color === 'red' ? '255, 0, 0' : 

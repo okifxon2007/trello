@@ -19,7 +19,7 @@ function App() {
         {token && (
           <>
             <Route
-              path="/"
+              path="/:id"
               element={
                 <MainLayout>
                   <Trello></Trello>
