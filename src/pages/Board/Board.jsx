@@ -159,9 +159,9 @@ const Board = () => {
 
      
 
-      <div className="create">
+      <div  onClick={() => document.getElementById('my_modal_3').showModal()} className="create">
       <div
-       onClick={() => document.getElementById('my_modal_3').showModal()}
+      
   className={`relative w-80 h-28 bg-gradient-to-r from-green-400 via-green-500 to-teal-500 rounded-xl shadow-lg transition-all duration-500 transform hover:scale-110 hover:rotate-2 hover:shadow-2xl cursor-pointer outline-none mb-6 mt-20 overflow-hidden`}
 >
   <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white via-transparent to-transparent opacity-20 pointer-events-none"></div>
@@ -180,59 +180,8 @@ const Board = () => {
 
       <div className="creatboardpage mt-10">
 
-        <div className="modal-box">
-          <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              
-            </button>
-          </form>
-          <h3 className="font-bold text-lg text-center">Create Board</h3>
-
-          <div className="flex justify-center items-center">
-            <form className="bg-white p-5 rounded-lg shadow-lg">
-              <div className="color">
-                <h2>BG-Color</h2>
-                <div className="c-df flex gap-6">
-                  {['red', 'gray', 'orange', 'green'].map((bgColor) => (
-                    <p
-                      key={bgColor}
-                      className={`w-12 h-6 rounded-sm ${color === bgColor ? "border-2 border-yellow-500" : ""} ${
-                        bgColor === 'red' ? 'bg-red-500' :
-                          bgColor === 'gray' ? 'bg-gray-500' :
-                            bgColor === 'orange' ? 'bg-orange-500' :
-                              bgColor === 'green' ? 'bg-green-500' : ''
-                      }`}
-                      onClick={() => handleColorChange(bgColor)}
-                    ></p>
-                  ))}
-                </div>
-
-                <br /><br />
-              </div>
-              <label>Board titlee</label> <br />
-              <input
-                ref={nameref}
-                className="input input-bordered input-success w-full max-w-xs"
-                type="text"
-                placeholder="Board title..."
-              />
-              <br />
-              <label>Visibility</label> <br />
-              <input
-                ref={titleref}
-                className="input input-bordered input-success w-full max-w-xs"
-                type="text"
-                placeholder="Board visibility..."
-              />
-              <br /><br />
-              <br />
-              <button
-                onClick={handleapi}
-                className="btn btn-outline btn-success mt-4"
-              >
-                Create
-              </button>
-            </form>
+        
+         
       <dialog id="my_modal_3" className="modal">
   <div className="modal-box relative">
     <form method="dialog">
@@ -321,7 +270,7 @@ const Board = () => {
 
 
 
-        <h3 className="font-bold text-lg text-center mt-5">All Boardd</h3>
+     
 
         <div className="cards-container flex flex-wrap">
           {cards.map((item) => (
@@ -398,9 +347,9 @@ const Board = () => {
 
        
       </div>
+    
     </div>
-    </div>
-    </div>
+    
 
   );
 };
