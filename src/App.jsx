@@ -44,7 +44,7 @@ function App() {
             ></Route>
 
             <Route
-              path="/board"
+              path="/"
               element={
                 <MainLayout>
                   <Board></Board>

@@ -116,7 +116,7 @@ function SignUp() {
               />
             </svg>
             <input
-              type="text"
+              type="password"
               ref={pass}
               className="grow"
               placeholder="password"
@@ -139,14 +139,14 @@ function SignUp() {
               />
             </svg>
             <input
-              type="text"
+              type="password"
               ref={confirmPass}
               className="grow"
               placeholder="password"
             />
           </label>
         </div>
-        <Link to="/signin">I have acc</Link>
+        <Link className="text-blue-600" to="/login">Login</Link>
         <button
           onClick={SignUping}
           className="bg-def-blue text-white btn-def border-def"
