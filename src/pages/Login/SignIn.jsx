@@ -31,7 +31,6 @@ function SignIn() {
           localStorage.setItem("user", JSON.stringify(res.data.user));
           navigate("/");
           location.reload();
-          navigate("/");
           console.log(34);
         }
       })
@@ -84,14 +83,14 @@ function SignIn() {
               />
             </svg>
             <input
-              type="text"
+              type="password"
               className="grow"
               placeholder="password"
               ref={pass}
             />
           </label>
         </div>
-        <Link to="/signup">I haven't acc</Link>
+        <Link className="text-blue-600" to="/signup">Register</Link>
         <button
           onClick={Signining}
           className="bg-def-blue text-white btn-def border-def"

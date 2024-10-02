@@ -4,6 +4,13 @@ import { Link, NavLink } from "react-router-dom";
 // import category from "./images/navImages/cate";
 
 function MainLayout({ children }) {
+
+  function handlelocal(e){
+    e.preventDefault()
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    window.location.reload()
+  }
   return (
     <div className="bg-[#F3F7FA] h-[1224px]">
       <div className="flex">
@@ -126,12 +133,7 @@ function MainLayout({ children }) {
         </div>
         <div className="horizontal h-[76px] w-full px-4 py-10 bg-white flex justify-between items-center">
           <div className="flex gap-2">
-            <Link to="/signin" className="btn-def border-def">
-              Sign in
-            </Link>
-            <Link to="/signup" className="btn-def bg-def-blue text-white">
-              Sign up
-            </Link>
+           
           </div>
           <label>
             <input
@@ -145,10 +147,11 @@ function MainLayout({ children }) {
             <i className="text-[24px] text-[#768396] fa-regular fa-bell"></i>
             <div className="flex items-center gap-[17px]">
               <img
+              onClick={handlelocal}
                 width={30}
                 height={30}
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnG9XsiAuW2P1NkrMyXF-qAnh2to04EpRvIg&s"
-                className="rounded-[30px]"
+                className="rounded-[30px] cursor-pointer"
                 alt=""
               />
               <i className="text-[24px] text-def-blue fa-solid fa-angle-down"></i>

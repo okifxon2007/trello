@@ -71,7 +71,7 @@ const Board = () => {
       });
 
       if (resp.status === 200 || resp.status === 201) {
-        alert('Sizning malumotingiz qo\'shildi');
+        window.location.reload()
       } else {
         alert('Siz hato malumot kiritdingiz');
       }
@@ -90,6 +90,7 @@ const Board = () => {
 
   const boardnav = (id) => {
     nav(`/${id}`);
+    scroll(top)
   };
 
   
