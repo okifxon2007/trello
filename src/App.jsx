@@ -9,6 +9,7 @@ import "./App.css";
 import Board from "./pages/Board/Board";
 import SignIn from "./pages/Login/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
+import { Chat } from "@mui/icons-material";
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
@@ -51,6 +52,10 @@ function App() {
                 </MainLayout>
               }
             ></Route>
+
+            <Route path="/chat" element = {<MainLayout>
+              <Chat></Chat>
+            </MainLayout>}></Route>
 
             <Route
               path="*"

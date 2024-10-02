@@ -99,6 +99,7 @@ function MainLayout({ children }) {
                 </svg>
               </li>
             </NavLink>
+            <NavLink to='/chat'>
             <li className="p-[13px] rounded-[14px]">
               <svg
                 width="20"
@@ -113,6 +114,8 @@ function MainLayout({ children }) {
                 />
               </svg>
             </li>
+            
+            </NavLink>
             <NavLink to="/files">
               <li className="p-[13px] rounded-[14px]">
                 <svg
