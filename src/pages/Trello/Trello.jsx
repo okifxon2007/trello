@@ -1,422 +1,84 @@
-// import React, { useState, useContext, createContext, useRef, useEffect } from "react";
-// import { Modal } from "@mui/material";
-// import HeadSection from "../../components/HeadSection/HeadSection";
-// import axios from "axios";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-// import { useParams } from "react-router-dom";
-
-// const ModalContext = createContext();
-
-// function Trello() {
-  
-//   const [backlogTasks, setBacklogTasks] = useState([]);
-//   const [todoTasks, setTodoTasks] = useState([]);
-//   const [inProgressTasks, setInProgressTasks] = useState([]);
-//   const [reviewTasks, setReviewTasks] = useState([]);
-
-//   const { modalData, openModal, closeModal } = useModal();
-//   const inputRefs = {
-//     backlog: useRef(),
-//     todo: useRef(),
-//     inProgress: useRef(),
-//     review: useRef(),
-//   };
-
-
-  
-//   function onDragEnd(result) {
-//     const { source, destination } = result;
-//     if (!destination) return;
-
-//     const sourceTasks = getTasksById(source.droppableId);
-//     const destinationTasks = getTasksById(destination.droppableId);
-//     const [movedTask] = sourceTasks.splice(source.index, 1);
-
-//     destinationTasks.splice(destination.index, 0, movedTask);
-//     setTasksById(source.droppableId, sourceTasks);
-//     setTasksById(destination.droppableId, destinationTasks);
-//   }
-
-//   function getTasksById(id) {
-//     switch (id) {
-//       case "backlog": return backlogTasks;
-//       case "todo": return todoTasks;
-//       case "inProgress": return inProgressTasks;
-//       case "review": return reviewTasks;
-//       default: return [];
-//     }
-//   }
-
-//   function setTasksById(id, tasks) {
-//     switch (id) {
-//       case "backlog": setBacklogTasks(tasks); break;
-//       case "todo": setTodoTasks(tasks); break;
-//       case "inProgress": setInProgressTasks(tasks); break;
-//       case "review": setReviewTasks(tasks); break;
-//       default: break;
-//     }
-//   }
-
-//   return (
-//     <ModalContext.Provider value={{ modalData, openModal, closeModal }}>
-//       <div className="container mx-auto max-w-[1200px]">
-//         <HeadSection />
-//         <DragDropContext onDragEnd={onDragEnd}>
-//           <TaskBoard 
-//             tasks={{
-//               backlog: [backlogTasks, setBacklogTasks],
-//               todo: [todoTasks, setTodoTasks],
-//               inProgress: [inProgressTasks, setInProgressTasks],
-//               review: [reviewTasks, setReviewTasks],
-//             }}
-//             inputRefs={inputRefs}
-//           />
-//         </DragDropContext>
-//         <CustomModal modalData={modalData} closeModal={closeModal} />
-//       </div>
-//     </ModalContext.Provider>
-//   );
-// }
-
-// function TaskBoard({ tasks, inputRefs }) {
-//   const params = useParams();
-
-//   function addTask(setTasks, inputRef) {
-//     const newTaskTitle = inputRef.current.value.trim(); 
-//     const token = localStorage.getItem('token'); 
-
-//     if (newTaskTitle) {
-//       const newTask = {
-//         title: newTaskTitle,        
-//         description: newTaskTitle || "No Description",  
-//         status: "Pending",
-//         priority: "Medium",
-//         dueDate: Date.now(),
-//         boardId: params.id, 
-//         assignedTo: null,
-//       };
-
-//       axios.post(
-//         "https://trello.vimlc.uz/api/tasks/create",
-//         newTask,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}` 
-//           }
-//         }
-//       )
-//       .then(response => {
-//         setTasks(prevTasks => [...prevTasks, response.data]);
-//         inputRef.current.value = ""; 
-//       })
-//       .catch(error => {
-//         console.error("Error creating task:", error);
-//       });
-//     }    
-//   }
-
-
-
-
-
-
-
-//   return (
-//     <div className="mt-8 bg-white shadow p-6 grid grid-cols-4 gap-6">
-//       {Object.keys(tasks).map((columnId) => {
-//         const [taskList, setTaskList] = tasks[columnId];
-//         return (
-//           <Droppable key={columnId} droppableId={columnId}>
-//             {(provided) => (
-//               <div
-//                 ref={provided.innerRef}
-//                 {...provided.droppableProps}
-//                 className="bg-gray-100 p-4 rounded-lg"
-//               >
-//                 <h3 className="text-lg font-semibold mb-4 capitalize">{columnId}</h3>
-//                 {taskList.map((task, index) => (
-//                   <Draggable key={task.id} draggableId={`${columnId}-${task.id}`} index={index}>
-//                     {(provided) => (
-//                       <div
-//                         ref={provided.innerRef}
-//                         {...provided.draggableProps}
-//                         {...provided.dragHandleProps}
-//                         className="bg-white p-4 rounded-lg shadow-md mb-4 cursor-pointer"
-//                       >
-//                         <TaskCard task={task} />
-//                       </div>
-//                     )}
-//                   </Draggable>
-//                 ))}
-//                 {provided.placeholder}
-//                 <input
-//   ref={inputRefs[columnId]}
-//   className="w-full p-2 mt-4 rounded-md outline-none"
-//   type="text"
-//   placeholder={`Add Title for ${columnId}`}
-// />
-//                 <button
-//                   className="w-full text-blue-500 mt-4"
-//                   onClick={() => addTask(setTaskList, inputRefs[columnId])}
-//                 >
-//                   + Add Task
-//                 </button>
-//               </div>
-//             )}
-//           </Droppable>
-//         );
-//       })}
-//     </div>
-//   );
-// }
-
-
-
-
-
-// function TaskCard({ task }) {
-//   const { openModal } = useContext(ModalContext);
-
-//   return (
-//     <div
-//       className="bg-white p-4 rounded-lg shadow-md mb-4 cursor-pointer"
-//       onClick={() => openModal(task)}
-//     >
-//       <h4 className="font-semibold">{task.title}</h4>
-//       <p>{task.description || 'No description'}</p>
-//     </div>
-//   );
-// }
-
-// // Modalni boshqarish uchun hook
-// function useModal() {
-//   const [modalData, setModalData] = useState(null);
-
-//   const openModal = (task) => {
-//     setModalData(task);
-//   };
-
-//   const closeModal = () => {
-//     setModalData(null);
-//   };
-
-//   return { modalData, openModal, closeModal };
-// }
-
-// function CustomModal({ modalData, closeModal }) {
-//   const [taskTitle, setTaskTitle] = useState("");
-//   const [description, setDescription] = useState("");
-//   const [newChecklistItem, setNewChecklistItem] = useState("");
-//   const [checklistItems, setChecklistItems] = useState([]);
-//   const [newComment, setNewComment] = useState("");
-
-//   useEffect(() => {
-//     if (modalData) {
-//       setTaskTitle(modalData.title || "");
-//       setDescription(modalData.description || "");
-//       setChecklistItems(modalData.checklist || []);
-//     }
-//   }, [modalData]);
-
-//   if (!modalData) return null;
-
-//   const handleAddComment = () => {
-//     if (newComment) {
-//       axios.post(`https://trello.vimlc.uz/api/tasks/${modalData.id}/comment`, { comment: newComment })
-//         .then(response => {
-//           setChecklistItems((prevItems) => [...prevItems, response.data]);
-//           setNewComment(""); 
-//         })
-//         .catch(error => console.error("Error adding comment:", error));
-//     }
-//   };
-
-//   return (
-//     <Modal open={Boolean(modalData)} onClose={closeModal}>
-//       <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-//         <div className="bg-white dark:bg-gray-800 rounded-lg w-[800px] h-[600px] flex shadow-xl p-6 relative">
-//           <button onClick={closeModal} className="absolute top-4 right-4 text-gray-500">
-//             &times;
-//           </button>
-//           <input
-//             type="text"
-//             placeholder="Task Title"
-//             value={taskTitle}
-//             onChange={(e) => setTaskTitle(e.target.value)}
-//             className="text-xl font-semibold w-full dark:bg-gray-700 dark:text-white"
-//           />
-//           <textarea
-//             value={description}
-//             onChange={(e) => setDescription(e.target.value)}
-//             placeholder="Task Description"
-//             className="mt-4 w-full h-32 p-2 rounded-md outline-none dark:bg-gray-700 dark:text-white"
-//           />
-//           <div className="mt-4">
-//             <h4 className="font-semibold">Checklist:</h4>
-//             <ul>
-//               {checklistItems.map((item, index) => (
-//                 <li key={index} className="flex justify-between">
-//                   <span>{item}</span>
-//                 </li>
-//               ))}
-//             </ul>
-//             <input
-//               type="text"
-//               placeholder="New checklist item"
-//               value={newChecklistItem}
-//               onChange={(e) => setNewChecklistItem(e.target.value)}
-//               className="mt-2 w-full p-2 rounded-md outline-none dark:bg-gray-700 dark:text-white"
-//             />
-//             <button
-//               onClick={() => {
-//                 if (newChecklistItem) {
-//                   setChecklistItems((prevItems) => [...prevItems, newChecklistItem]);
-//                   setNewChecklistItem("");
-//                 }
-//               }}
-//               className="mt-2 text-blue-500"
-//             >
-//               Add to checklist
-//             </button>
-//           </div>
-//           <div className="mt-4">
-//             <h4 className="font-semibold">Comments:</h4>
-//             <ul>
-//               {modalData.comments.map((comment, index) => (
-//                 <li key={index} className="flex justify-between">
-//                   <span>{comment}</span>
-//                 </li>
-//               ))}
-//             </ul>
-//             <input
-//               type="text"
-//               placeholder="Add a comment"
-//               value={newComment}
-//               onChange={(e) => setNewComment(e.target.value)}
-//               className="mt-2 w-full p-2 rounded-md outline-none dark:bg-gray-700 dark:text-white"
-//             />
-//             <button onClick={handleAddComment} className="mt-2 text-blue-500">
-//               Add Comment
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </Modal>
-//   );
-// }
-
-// export default Trello;
-
 import React, { useState, useContext, createContext, useRef, useEffect } from "react";
-import { Modal } from "@mui/material";
-import HeadSection from "../../components/HeadSection/HeadSection";
 import axios from "axios";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useParams } from "react-router-dom";
+
 const ModalContext = createContext();
 
 function Trello() {
-  const [backlogTasks, setBacklogTasks] = useState([]);
-  const [todoTasks, setTodoTasks] = useState([]);
-  const [inProgressTasks, setInProgressTasks] = useState([]);
-  const [reviewTasks, setReviewTasks] = useState([]);
-
-  const { modalData, openModal, closeModal } = useModal();
+  const [tasks, setTasks] = useState({
+    backlog: [],
+    todo: [],
+    inProgress: [],
+    review: []
+  });
+  const [modalData, setModalData] = useState(null);
   const inputRefs = {
     backlog: useRef(),
     todo: useRef(),
     inProgress: useRef(),
     review: useRef(),
   };
+  const params = useParams();
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   axios.get(`https://trello.vimlc.uz/api/tasks`, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`
-  //     }
-  //   })
-  //     .then(response => {
-  //       const tasks = response.data;
-  //       // To'g'ri columnlarga bo'linadi
-  //       setBacklogTasks(tasks.filter(task => task.status === "backlog"));
-  //       setTodoTasks(tasks.filter(task => task.status === "todo"));
-  //       setInProgressTasks(tasks.filter(task => task.status === "inProgress"));
-  //       setReviewTasks(tasks.filter(task => task.status === "review"));
-  //     })
-  //     .catch(error => console.error("Error fetching tasks:", error));
-  // }, []);
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
-  function onDragEnd(result) {
+  const fetchTasks = () => {
+    const token = localStorage.getItem('token');
+    axios.get(`https://trello.vimlc.uz/api/tasks/${params.id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        const groupedTasks = groupTasksByStatus(response.data.tasks);
+        setTasks(groupedTasks);
+      })
+      .catch(error => console.error("Error fetching tasks:", error));
+  };
+
+  const groupTasksByStatus = (tasks) => {
+    return tasks.reduce((acc, task) => {
+      const status = task.status.toLowerCase();
+      if (!acc[status]) {
+        acc[status] = [];
+      }
+      acc[status].push(task);
+      return acc;
+    }, {
+      backlog: [],
+      todo: [],
+      inProgress: [],
+      review: []
+    });
+  };
+
+  const onDragEnd = (result) => {
     const { source, destination } = result;
     if (!destination) return;
 
-    const sourceTasks = getTasksById(source.droppableId);
-    const destinationTasks = getTasksById(destination.droppableId);
-    const [movedTask] = sourceTasks.splice(source.index, 1);
+    setTasks(prev => {
+      const newTasks = { ...prev };
+      const [movedTask] = newTasks[source.droppableId].splice(source.index, 1);
+      newTasks[destination.droppableId].splice(destination.index, 0, movedTask);
+      return newTasks;
+    });
+  };
 
-    destinationTasks.splice(destination.index, 0, movedTask);
-    setTasksById(source.droppableId, sourceTasks);
-    setTasksById(destination.droppableId, destinationTasks);
-  }
-
-  function getTasksById(id) {
-    switch (id) {
-      case "backlog": return backlogTasks;
-      case "todo": return todoTasks;
-      case "inProgress": return inProgressTasks;
-      case "review": return reviewTasks;
-      default: return [];
-    }
-  }
-
-  function setTasksById(id, tasks) {
-    switch (id) {
-      case "backlog": setBacklogTasks(tasks); break;
-      case "todo": setTodoTasks(tasks); break;
-      case "inProgress": setInProgressTasks(tasks); break;
-      case "review": setReviewTasks(tasks); break;
-      default: break;
-    }
-  }
-
-  return (
-    <ModalContext.Provider value={{ modalData, openModal, closeModal }}>
-      <div className="container mx-auto max-w-[1200px]">
-        <HeadSection />
-        <DragDropContext onDragEnd={onDragEnd}>
-          <TaskBoard 
-            tasks={{
-              backlog: [backlogTasks, setBacklogTasks],
-              todo: [todoTasks, setTodoTasks],
-              inProgress: [inProgressTasks, setInProgressTasks],
-              review: [reviewTasks, setReviewTasks],
-            }}
-            inputRefs={inputRefs}
-          />
-        </DragDropContext>
-        <CustomModal modalData={modalData} closeModal={closeModal} />
-      </div>
-    </ModalContext.Provider>
-  );
-}
-
-function TaskBoard({ tasks, inputRefs }) {
-  const params = useParams();
-
-  function addTask(setTasks, inputRef) {
-    const newTaskTitle = inputRef.current.value.trim(); 
-    const token = localStorage.getItem('token'); 
-
+  const addTask = (columnId) => {
+    const newTaskTitle = inputRefs[columnId].current.value.trim(); 
+    const token = localStorage.getItem('token');     
     if (newTaskTitle) {
       const newTask = {
         title: newTaskTitle,        
-        description: newTaskTitle || "No Description",  
-        status: "Pending",
+        description: newTaskTitle,  
+        status: columnId,
         priority: "Medium",
-        dueDate: Date.now(),
+        dueDate: new Date().toISOString(),
         boardId: params.id, 
-        assignedTo: null,
+        assignedTo: 'asignedto',
       };
 
       axios.post(
@@ -425,85 +87,20 @@ function TaskBoard({ tasks, inputRefs }) {
         {
           headers: {
             Authorization: `Bearer ${token}` 
-          }
+          },
+
         }
       )
-      .then(response => {
-        setTasks(prevTasks => [...prevTasks, response.data]);
-        inputRef.current.value = ""; 
+      .then((response) => {
+         alert('sizning malumotingiz qoshildi')
       })
       .catch(error => {
-        console.error("Error creating task:", error);
+        console.log( error);
       });
     }    
-  }
+  };
 
-  return (
-    <div className="mt-8 bg-white shadow p-6 grid grid-cols-4 gap-6">
-      {Object.keys(tasks).map((columnId) => {
-        const [taskList, setTaskList] = tasks[columnId];
-        return (
-          <Droppable key={columnId} droppableId={columnId}>
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className="bg-gray-100 p-4 rounded-lg"
-              >
-                <h3 className="text-lg font-semibold mb-4 capitalize">{columnId}</h3>
-                {taskList.map((task, index) => (
-                  <Draggable key={task.id} draggableId={`${columnId}-${task.id}`} index={index}>
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="bg-white p-4 rounded-lg shadow-md mb-4 cursor-pointer"
-                      >
-                        <TaskCard task={task} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-                <input
-                  ref={inputRefs[columnId]}
-                  className="w-full p-2 mt-4 rounded-md outline-none"
-                  type="text"
-                  placeholder={`Add Title for ${columnId}`}
-                />
-                <button
-                  className="w-full text-blue-500 mt-4"
-                  onClick={() => addTask(setTaskList, inputRefs[columnId])}
-                >
-                  + Add Task
-                </button>
-              </div>
-            )}
-          </Droppable>
-        );
-      })}
-    </div>
-  );
-}
 
-function TaskCard({ task }) {
-  const { openModal } = useContext(ModalContext);
-
-  return (
-    <div
-      className="bg-white p-4 rounded-lg shadow-md mb-4 cursor-pointer"
-      onClick={() => openModal(task)}
-    >
-      <h4 className="font-semibold">{task.title}</h4>
-      <p>{task.description || 'No description'}</p>
-    </div>
-  );
-}
-
-// Modalni boshqarish uchun hook
-function useModal() {
-  const [modalData, setModalData] = useState(null);
 
   const openModal = (task) => {
     setModalData(task);
@@ -513,111 +110,130 @@ function useModal() {
     setModalData(null);
   };
 
-  return { modalData, openModal, closeModal };
+  return (
+    <ModalContext.Provider value={{ modalData, openModal, closeModal }}>
+      <div className="container mx-auto max-w-[1200px]">
+        <h1 className="text-2xl font-bold mb-4">Trello Board</h1>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="grid grid-cols-4 gap-4">
+            {Object.entries(tasks).map(([columnId, columnTasks]) => (
+              <Column 
+                key={columnId}
+                columnId={columnId}
+                tasks={columnTasks}
+                inputRef={inputRefs[columnId]}
+                addTask={addTask}
+              />
+            ))}
+          </div>
+        </DragDropContext>
+        {modalData && <TaskModal task={modalData} closeModal={closeModal} />}
+      </div>
+    </ModalContext.Provider>
+  );
 }
 
-function CustomModal({ modalData, closeModal }) {
-  const [taskTitle, setTaskTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [newChecklistItem, setNewChecklistItem] = useState("");
-  const [checklistItems, setChecklistItems] = useState([]);
-  const [newComment, setNewComment] = useState("");
+function Column({ columnId, tasks, inputRef, addTask }) {
+  return (
+    <Droppable droppableId={columnId}>
+      {(provided) => (
+        <div
+          {...provided.droppableProps}
+          ref={provided.innerRef}
+          className="bg-gray-100 p-4 rounded-lg"
+        >
+          <h2 className="text-lg font-semibold mb-4 capitalize">{columnId}</h2>
+          {tasks.map((task, index) => (
+            <TaskCard key={task.id} task={task} index={index} />
+          ))}
+          {provided.placeholder}
+          <input
+            ref={inputRef}
+            className="w-full p-2 mt-4 rounded-md outline-none"
+            type="text"
+            placeholder={`Add task to ${columnId}`}
+          />
+          <button
+            className="w-full bg-blue-500 text-white mt-2 p-2 rounded-md"
+            onClick={() => addTask(columnId)}
+          >
+            Add Task
+          </button>
+        </div>
+      )}
+    </Droppable>
+  );
+}
 
-  useEffect(() => {
-    if (modalData) {
-      setTaskTitle(modalData.title || "");
-      setDescription(modalData.description || "");
-      setChecklistItems(modalData.checklist || []);
-    }
-  }, [modalData]);
+function TaskCard({ task, index }) {
+  const { openModal } = useContext(ModalContext);
 
-  if (!modalData) return null;
+  return (
+    <Draggable draggableId={task.id.toString()} index={index}>
+      {(provided) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          className="bg-white p-4 rounded-lg shadow-md mb-4 cursor-pointer"
+          onClick={() => openModal(task)}
+        >
+          <h3 className="font-semibold">{task.title}</h3>
+          <p className="text-sm text-gray-600">{task.description}</p>
+        </div>
+      )}
+    </Draggable>
+  );
+}
 
-  const handleAddComment = () => {
-    if (newComment) {
-      axios.post(`https://trello.vimlc.uz/api/tasks/${modalData.id}/comment`, { comment: newComment })
-        .then(response => {
-          // Commentsni yangilash
-          setChecklistItems((prevItems) => [...prevItems, response.data]);
-          setNewComment(""); 
-        })
-        .catch(error => console.error("Error adding comment:", error));
-    }
+function TaskModal({ task, closeModal }) {
+  const [title, setTitle] = useState(task.title);
+  const [description, setDescription] = useState(task.description);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Here you would typically update the task via API
+    console.log("Updating task:", { ...task, title, description });
+    closeModal();
   };
 
   return (
-    <Modal open={Boolean(modalData)} onClose={closeModal}>
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg w-[800px] h-[600px] flex shadow-xl p-6 relative">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg w-96">
+        <h2 className="text-xl font-bold mb-4">Edit Task</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            className="w-full p-2 mb-4 border rounded"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Task Title"
+          />
+          <textarea
+            className="w-full p-2 mb-4 border rounded"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Task Description"
+            rows="3"
+          />
+          <div className="flex justify-end">
             <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"
+              type="button"
+              onClick={closeModal}
+              className="mr-2 px-4 py-2 bg-gray-200 rounded"
             >
-                &times;
+              Cancel
             </button>
-            <h2 className="text-xl font-semibold mb-4">Add a new task</h2>
-            <input
-                type="text"
-                placeholder="Task Title"
-                value={taskTitle}
-                onChange={(e) => setTaskTitle(e.target.value)}
-                className="text-xl font-semibold w-full dark:bg-gray-700 dark:text-white border border-gray-300 dark:border-gray-600 rounded-md p-2 focus:outline-none focus:border-blue-500"
-            />
-            <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Task Description"
-                className="mt-4 w-full h-24 p-2 rounded-md outline-none dark:bg-gray-700 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500"
-            />
-            <div className="mt-4">
-                <h4 className="font-semibold">Checklist:</h4>
-                <ul className="mt-2 border-t border-gray-200 pt-2">
-                    {checklistItems.map((item, index) => (
-                        <li key={index} className="flex justify-between py-1">
-                            <span>{item}</span>
-                        </li>
-                    ))}
-                </ul>
-                <input
-                    type="text"
-                    placeholder="New checklist item"
-                    value={newChecklistItem}
-                    onChange={(e) => setNewChecklistItem(e.target.value)}
-                    className="mt-2 w-full p-2 rounded-md outline-none dark:bg-gray-700 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500"
-                />
-                <button
-                    onClick={() => {
-                        if (newChecklistItem) {
-                            setChecklistItems((prevItems) => [...prevItems, newChecklistItem]);
-                            setNewChecklistItem("");
-                        }
-                    }}
-                    className="mt-2 text-blue-500 hover:underline"
-                >
-                    + Add to checklist
-                </button>
-            </div>
-            <div className="mt-4">
-                <h4 className="font-semibold">Comments:</h4>
-                <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Add a comment"
-                    className="mt-2 w-full h-24 p-2 rounded-md outline-none dark:bg-gray-700 dark:text-white border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500"
-                />
-                <button
-                    onClick={handleAddComment}
-                    className="mt-2 text-blue-500 hover:underline"
-                >
-                    + Add Comment
-                </button>
-            </div>
-        </div>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-</Modal>
   );
 }
 
 export default Trello;
-
-
