@@ -110,6 +110,8 @@ function Trello() {
     setModalData(null);
   };
 
+
+  
   return (
     <ModalContext.Provider value={{ modalData, openModal, closeModal }}>
       <div className="container mx-auto max-w-[1200px]">
