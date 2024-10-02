@@ -73,12 +73,12 @@ function Trello() {
     if (newTaskTitle) {
       const newTask = {
         title: newTaskTitle,        
-        description: newTaskTitle,  
-        status: columnId,
-        priority: "Medium",
-        dueDate: new Date().toISOString(),
+        // description: newTaskTitle,  
+        // status: columnId,
+        // priority: "Medium",
+        // dueDate: new Date().toISOString(),
         boardId: params.id, 
-        assignedTo: 'asignedto',
+        // assignedTo: 'asignedto',
       };
 
       axios.post(
@@ -87,12 +87,11 @@ function Trello() {
         {
           headers: {
             Authorization: `Bearer ${token}` 
-          },
-
+          }
         }
       )
       .then((response) => {
-         alert('sizning malumotingiz qoshildi')
+         window.location.reload()
       })
       .catch(error => {
         console.log( error);
@@ -110,8 +109,6 @@ function Trello() {
     setModalData(null);
   };
 
-
-  
   return (
     <ModalContext.Provider value={{ modalData, openModal, closeModal }}>
       <div className="container mx-auto max-w-[1200px]">
